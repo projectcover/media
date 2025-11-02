@@ -94,6 +94,10 @@
         body.loading {
             overflow: hidden;
         }
+        /* New: Prevent body scroll when modal is open */
+        body.modal-open {
+            overflow: hidden;
+        }
 
         /* Preloader */
         #preloader {
@@ -261,88 +265,161 @@
 
         .file-tree ul {
             list-style: none;
-            padding-left: 0.5rem;
+            padding-left: 0; /* Removed padding */
         }
         
+        /* --- UPDATED: File List Item --- */
         .file-tree li {
-            margin-bottom: 0.75rem; /* Adjusted margin */
-            display: flex; /* Added */
-            justify-content: space-between; /* Added */
-            align-items: center; /* Added */
-            gap: 1rem; /* Added */
+            margin-bottom: 0.75rem; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 1rem; 
+            padding-bottom: 0.75rem; /* Add padding for border */
+            border-bottom: 1px solid #2a2a2a; /* Lighter separator */
+        }
+        .file-tree li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
-        .file-tree a {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease; /* Simplified transition */
-            display: inline-flex; /* Use flex to align icon */
+        .file-info {
+            display: flex;
             align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            /* UPDATED: Added background-color to transition */
+            transition: color 0.3s ease, background-color 0.3s ease;
+            word-break: break-all;
+            min-width: 0; /* Allow text to wrap/shrink */
+            /* UPDATED: Added padding for hover effect */
+            padding: 0.5rem;
+            border-radius: 6px;
+            margin-left: -0.5rem; /* Offset padding */
+        }
+        .file-info:hover {
+            color: var(--accent-color);
+            background-color: #2a2a2a; /* NEW: Add hover background */
+        }
+        /* NEW: Scale thumbnail on hover */
+        .file-info:hover .file-thumbnail {
+            transform: scale(1.1);
+        }
+        
+        .file-thumbnail {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #333;
+            flex-shrink: 0;
+            background-color: #101010; /* Fallback bg */
+            transition: transform 0.3s ease; /* NEW: Add transition */
+        }
+
+        .file-name {
+            font-size: 1rem;
             word-break: break-all;
         }
         
-        .file-tree a::before {
-            content: none; /* Removed the arrow */
-        }
-
-        .file-tree a:hover {
-            color: var(--accent-color);
-        }
-        
-        .file-tree a:hover::before {
-            opacity: 0; /* Hidden */
-        }
-        
-        .external-link-icon {
-            width: 0.9em;
-            height: 0.9em;
-            stroke: var(--text-secondary);
-            transition: stroke 0.3s ease;
-            margin-left: 0.5rem; /* Adjusted margin */
+        .file-actions {
+            display: flex;
+            align-items: center;
+            /* gap: 0.5rem; */ /* Removed */
+            gap: 0; /* Added */
             flex-shrink: 0;
+            /* NEW: Pill container styles */
+            background-color: #2a2a2a;
+            border-radius: 9999px;
+            border: 1px solid #333;
+            overflow: hidden;
         }
         
-        .file-tree a:hover .external-link-icon {
-            stroke: var(--accent-color);
-        }
-
-        /* --- UPDATED: Copy Button Styles --- */
-        .copy-btn {
+        /* --- NEW: Action Button Base Style --- */
+        .action-btn {
             background-color: transparent;
             color: var(--text-secondary);
-            border: 1px solid var(--text-secondary);
-            padding: 0.25rem 0.75rem;
-            border-radius: 6px;
+            /* border: 1px solid var(--text-secondary); */ /* Removed */
+            /* padding: 0.25rem 0.75rem; */ /* Removed */
+            padding: 0.5rem 1rem; /* Updated padding */
+            /* border-radius: 6px; */ /* Removed */
+            border: none; /* Added */
+            border-radius: 0; /* Added */
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
             transition: all 0.3s ease;
             white-space: nowrap;
-            flex-shrink: 0; /* Prevent button from shrinking */
-            
-            /* Flex properties for icon */
+            flex-shrink: 0;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 0.4rem;
-            min-width: 105px; /* Fixed width for smooth text change */
+            text-decoration: none;
         }
-
-        .copy-btn svg {
+        
+        .action-btn svg {
             stroke: var(--text-secondary);
             transition: all 0.3s ease;
             flex-shrink: 0;
         }
 
-        .copy-btn:hover {
+        /* NEW: Base hover state for all action buttons */
+        .action-btn:hover {
             background-color: var(--accent-color);
-            border-color: var(--accent-color);
             color: var(--text-primary);
+        }
+        .action-btn:hover svg {
+            stroke: var(--text-primary);
+        }
+
+        /* --- NEW: Focus States --- */
+        /* .action-btn:focus-visible, .file-info:focus-visible, .modal-close:focus-visible { */ /* Modified */
+        .file-info:focus-visible, .modal-close:focus-visible {
+            outline: 2px solid var(--accent-color);
+            outline-offset: 2px;
+            outline-offset: 2px;
+            border-radius: 4px; /* Ensure outline follows border radius */
+        }
+        /* NEW: Focus state for pill group */
+        .file-actions:focus-within {
+             outline: 2px solid var(--accent-color);
+             outline-offset: 2px;
+             border-color: #2a2a2a; /* Hides original border on focus */
+        }
+        .modal-close:focus-visible {
+             border-radius: 50%; /* Specific for close button */
+        }
+        
+        /* --- NEW: Open Button --- */
+        .open-btn {
+            /* min-width: 80px; */ /* Removed */
+            border-right: 1px solid #444; /* Added divider */
+        }
+        .open-btn:hover {
+            /* background-color: #333; */ /* Removed - uses base .action-btn:hover */
+            /* border-color: #444; */ /* Removed */
+            /* color: var(--text-primary); */ /* Removed */
+        }
+        .open-btn:hover svg {
+            /* stroke: var(--text-primary); */ /* Removed */
+        }
+
+        /* --- UPDATED: Copy Button Styles --- */
+        .copy-btn {
+            /* min-width: 105px; */ /* Removed */
+        }
+
+        .copy-btn:hover {
+            /* background-color: var(--accent-color); */ /* Removed - uses base .action-btn:hover */
+            /* border-color: var(--accent-color); */ /* Removed */
+            /* color: var(--text-primary); */ /* Removed */
         }
         
         .copy-btn:hover svg {
-            stroke: var(--text-primary);
+            /* stroke: var(--text-primary); */ /* Removed */
         }
 
         .copy-btn .copied-icon {
@@ -355,6 +432,11 @@
             color: white;
             cursor: default;
         }
+        /* NEW: Keep success state on hover */
+        .copy-btn.copied:hover {
+            background-color: var(--success-color);
+            color: white;
+        }
 
         .copy-btn.copied .copy-icon {
             display: none; /* Hide copy icon when copied */
@@ -364,6 +446,97 @@
             stroke: white;
         }
         /* --- END: Copy Button Styles --- */
+        
+        
+        /* --- NEW: Preview Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            visibility: hidden;
+        }
+        .modal-overlay.visible {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            position: relative;
+            background: var(--secondary-bg);
+            padding: 1rem;
+            border-radius: 12px;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: scale(0.95);
+            opacity: 0;
+            /* UPDATED: Bouncier transition */
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            border: 1px solid #333;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: scale(1.1) rotate(90deg);
+        }
+        
+        #preview-image {
+            max-width: 100%;
+            max-height: calc(90vh - 80px); /* Leave space for padding/caption */
+            object-fit: contain;
+            border-radius: 8px;
+            /* Allow image pointer events for saving, etc. */
+            pointer-events: auto; 
+        }
+        
+        #preview-caption {
+            color: var(--text-primary);
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        /* --- END: Modal Styles --- */
+
 
         @media (max-width: 768px) {
             header {
@@ -387,14 +560,42 @@
             .file-tree h3 {
                 font-size: 1.5rem;
             }
-            .file-tree a {
+            
+            /* Mobile file list */
+            .file-tree li {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .file-info {
+                width: 100%; /* Take full width */
+            }
+            .file-name {
                 font-size: 0.9rem;
             }
-            .copy-btn {
+            .file-actions {
+                width: 100%;
+                justify-content: flex-start; /* Align buttons */
+            }
+            .action-btn {
                 padding: 0.2rem 0.5rem;
                 font-size: 0.8rem;
-                min-width: 90px; /* Adjust for mobile */
                 gap: 0.3rem;
+            }
+            .open-btn {
+                /* min-width: 70px; */ /* Removed */
+            }
+            .copy-btn {
+                /* min-width: 90px; */ /* Removed */
+            }
+            
+            /* Mobile modal */
+            .modal-close {
+                top: 5px;
+                right: 5px;
+            }
+            #preview-caption {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -435,59 +636,113 @@
                 <div class="file-tree">
                     <h3>/brand</h3>
                     <ul>
-                        <li>
-                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-black.png" target="_blank" rel="noopener noreferrer">project_cover-icon-black.png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+                        <!-- UPDATED List Item Structure -->
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-black.png" data-filename="project_cover-icon-black.png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-black.png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-black.png</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/brand/project_cover-icon-black.png" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-orange(192x192).png" target="_blank" rel="noopener noreferrer">project_cover-icon-orange(192x192).png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-orange(192x192).png" data-filename="project_cover-icon-orange(192x192).png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-orange(192x192).png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-orange(192x192).png</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/brand/project_cover-icon-orange(192x192).png" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-orange(512x512).png" target="_blank" rel="noopener noreferrer">project_cover-icon-orange(512x512).png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-orange(512x512).png" data-filename="project_cover-icon-orange(512x512).png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-orange(512x512).png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-orange(512x512).png</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/brand/project_cover-icon-orange(512x512).png" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-orange.png" target="_blank" rel="noopener noreferrer">project_cover-icon-orange.png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-orange.png" data-filename="project_cover-icon-orange.png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-orange.png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-orange.png</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/brand/project_cover-icon-orange.png" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-white-enlarged.png" target="_blank" rel="noopener noreferrer">project_cover-icon-white-enlarged.png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-white-enlarged.png" data-filename="project_cover-icon-white-enlarged.png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-white-enlarged.png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-white-enlarged.png</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/brand/project_cover-icon-white-enlarged.png" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-white.png" target="_blank" rel="noopener noreferrer">project_cover-icon-white.png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-white.png" data-filename="project_cover-icon-white.png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-white.png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-white.png</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/brand/project_cover-icon-white.png" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
                     </ul>
 
@@ -495,86 +750,166 @@
 
                     <h3>/covers</h3>
                     <ul>
-                        <li>
-                            <a href="https://projectcover.github.io/media/covers/11zeros-Corrugated_1.jpg" target="_blank" rel="noopener noreferrer">11zeros-Corrugated_1.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+                        <li data-url="https://projectcover.github.io/media/covers/11zeros-Corrugated_1.jpg" data-filename="11zeros-Corrugated_1.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/11zeros-Corrugated_1.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">11zeros-Corrugated_1.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/covers/11zeros-Corrugated_1.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/covers/11zeros-Corrugated_2.jpg" target="_blank" rel="noopener noreferrer">11zeros-Corrugated_2.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/covers/11zeros-Corrugated_2.jpg" data-filename="11zeros-Corrugated_2.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/11zeros-Corrugated_2.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">11zeros-Corrugated_2.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/covers/11zeros-Corrugated_2.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_1.jpg" target="_blank" rel="noopener noreferrer">CASEOLOGY-Nano-Pop_1.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_1.jpg" data-filename="CASEOLOGY-Nano-Pop_1.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_1.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">CASEOLOGY-Nano-Pop_1.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_1.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_2.jpg" target="_blank" rel="noopener noreferrer">CASEOLOGY-Nano-Pop_2.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_2.jpg" data-filename="CASEOLOGY-Nano-Pop_2.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_2.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">CASEOLOGY-Nano-Pop_2.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_2.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_1.jpg" target="_blank" rel="noopener noreferrer">Casesily-Carbon-Fiber_1.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_1.jpg" data-filename="Casesily-Carbon-Fiber_1.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_1.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Casesily-Carbon-Fiber_1.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_1.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_2.jpg" target="_blank" rel="noopener noreferrer">Casesily-Carbon-Fiber_2.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_2.jpg" data-filename="Casesily-Carbon-Fiber_2.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_2.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Casesily-Carbon-Fiber_2.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_2.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_3.jpg" target="_blank" rel="noopener noreferrer">Casesily-Carbon-Fiber_3.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_3.jpg" data-filename="Casesily-Carbon-Fiber_3.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_3.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Casesily-Carbon-Fiber_3.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_3.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/covers/Spigen-Liquid-Air_1.jpg" target="_blank" rel="noopener noreferrer">Spigen-Liquid-Air_1.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/covers/Spigen-Liquid-Air_1.jpg" data-filename="Spigen-Liquid-Air_1.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Spigen-Liquid-Air_1.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Spigen-Liquid-Air_1.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/covers/Spigen-Liquid-Air_1.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/covers/Spigen-LiquidAir_2.jpg" target="_blank" rel="noopener noreferrer">Spigen-LiquidAir_2.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/covers/Spigen-LiquidAir_2.jpg" data-filename="Spigen-LiquidAir_2.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Spigen-LiquidAir_2.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Spigen-LiquidAir_2.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="httpsG://projectcover.github.io/media/covers/Spigen-LiquidAir_2.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
                     </ul>
 
@@ -582,23 +917,40 @@
 
                     <h3>/images</h3>
                     <ul>
-                        <li>
-                            <a href="https://projectcover.github.io/media/images/cover-image(raw).jpg" target="_blank" rel="noopener noreferrer">cover-image(raw).jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+                        <li data-url="https://projectcover.github.io/media/images/cover-image(raw).jpg" data-filename="cover-image(raw).jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/images/cover-image(raw).jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">cover-image(raw).jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/images/cover-image(raw).jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
-                        <li>
-                            <a href="https://projectcover.github.io/media/images/cover-image.jpg" target="_blank" rel="noopener noreferrer">cover-image.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
-                            <!-- UPDATED: Copy Button -->
-                            <button class="copy-btn">
-                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span>Copy Link</span>
-                            </button>
+
+                        <li data-url="https://projectcover.github.io/media/images/cover-image.jpg" data-filename="cover-image.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/images/cover-image.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">cover-image.jpg</span>
+                            </div>
+                            <div class="file-actions">
+                                <a href="https://projectcover.github.io/media/images/cover-image.jpg" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    <span>Open</span>
+                                </a>
+                                <button class="copy-btn action-btn" title="Copy file URL">
+                                    <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Copy Link</span>
+                                </button>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -606,6 +958,15 @@
             </div>
         </section>
     </main>
+    
+    <!-- NEW: Preview Modal HTML -->
+    <div id="preview-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" title="Close">&times;</span>
+            <img src="" alt="File Preview" id="preview-image">
+            <p id="preview-caption"></p>
+        </div>
+    </div>
     
     <!-- Footer -->
     <footer>
@@ -627,8 +988,8 @@
             window.onload = hidePreloader;
             setTimeout(hidePreloader, 1000); // Failsafe
 
-            // Prevent image download
-            document.querySelectorAll('img').forEach(img => {
+            // Prevent image download (except for preview)
+            document.querySelectorAll('img:not(#preview-image)').forEach(img => {
                 img.addEventListener('contextmenu', e => e.preventDefault());
             });
 
@@ -654,10 +1015,11 @@
 
             copyButtons.forEach(button => {
                 button.addEventListener('click', () => {
-                    const linkElement = button.previousElementSibling;
-                    if (!linkElement || !linkElement.href) return;
-
-                    const urlToCopy = linkElement.href;
+                    // Find the parent <li> and get the URL from its dataset
+                    const li = button.closest('li');
+                    if (!li || !li.dataset.url) return;
+                    
+                    const urlToCopy = li.dataset.url;
 
                     // Fallback method for iFrame compatibility
                     const tempTextArea = document.createElement('textarea');
@@ -690,6 +1052,7 @@
                         textSpan.textContent = 'Copied!';
                         button.classList.add('copied');
                         button.disabled = true;
+                        // FIXED: Hide copy icon, show checkmark
                         copyIcon.style.display = 'none';
                         copiedIcon.style.display = 'inline-block';
 
@@ -698,7 +1061,9 @@
                             textSpan.textContent = originalText;
                             button.classList.remove('copied');
                             button.disabled = false;
+                            // FIXED: Revert icons
                             copyIcon.style.display = 'inline-block';
+                
                             copiedIcon.style.display = 'none';
                         }, 2000);
                     } else {
@@ -716,6 +1081,56 @@
                         }
                     }
                 });
+            });
+            
+            
+            // --- NEW: Modal Preview Logic ---
+            const modalOverlay = document.getElementById('preview-modal');
+            const modalClose = modalOverlay.querySelector('.modal-close');
+            const previewImage = document.getElementById('preview-image');
+            const previewCaption = document.getElementById('preview-caption');
+            const previewTriggers = document.querySelectorAll('.preview-trigger');
+
+            const openModal = (src, filename) => {
+                previewImage.src = src;
+                previewCaption.textContent = filename;
+                modalOverlay.classList.add('visible');
+                document.body.classList.add('modal-open'); // Prevent body scroll
+            };
+
+            const closeModal = () => {
+                modalOverlay.classList.remove('visible');
+                document.body.classList.remove('modal-open');
+                // Clear image src after transition to prevent flash
+                setTimeout(() => {
+                    previewImage.src = ""; 
+                }, 300);
+            };
+
+            previewTriggers.forEach(trigger => {
+                trigger.addEventListener('click', () => {
+                    const li = trigger.closest('li');
+                    if (!li || !li.dataset.url) return;
+                    
+                    const src = li.dataset.url;
+                    const filename = li.dataset.filename;
+                    openModal(src, filename);
+                });
+            });
+
+            // Close modal events
+            modalClose.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                // Check if the click is on the overlay itself, not the content
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+            // Close with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modalOverlay.classList.contains('visible')) {
+                    closeModal();
+                }
             });
 
         });
