@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO: Updated Title -->
+    <title>Project_Cover Media - File Index</title>
+
+    <!-- SEO: Updated Meta Description -->
+    <meta name="description" content="An index of all project files and media assets for the Project_Cover photography portfolio.">
+    
+    <!-- SEO & Social Share Tags -->
+    <link rel="canonical" href="https://projectcover.github.io/file_index.html"/> 
+    <meta property="og:title" content="Project_Cover - File Index" />
+    <meta property="og:description" content="An index of all project files and media assets." />
+    <meta property="og:image" content="https://projectcover.github.io/media/brand/project_cover-icon-orange(512x512).png" /> 
+    <meta property="og:url" content="https://projectcover.github.io/file_index.html" /> 
+    <meta property="og:type" content="website" />
+    <!-- End SEO Tags -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap"></noscript>
+
+    <!-- Favicon & App Icon Links -->
+    <link rel="icon" href="https://projectcover.github.io/media/brand/project_cover-icon-orange.png" type="image/png">
+    <link rel="shortcut icon" href="https://projectcover.github.io/media/brand/project_cover-icon-orange(192x192).png" type="image/png">
+    <link rel="apple-touch-icon" href="https://projectcover.github.io/media/brand/project_cover-icon-orange.png">
+    
+    <!-- Web App Manifest (New) -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Theme Color for Browsers (New) -->
+    <meta name="theme-color" content="#101010">
+
+
+    <style>
+        /* CSS Reset and Basic Setup */
+        :root {
+            --primary-bg: #101010;
+            --secondary-bg: #1e1e1e;
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --accent-color: #FF6600;
+            --success-color: #28a745;
+            --font-main: 'Inter', sans-serif;
+            --font-headings: 'Lora', serif;
+        }
+
+        /* Custom Selection Styling */
+        ::-moz-selection {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        ::selection {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--primary-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        body.loading {
+            overflow: hidden;
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.75s ease, visibility 0.75s ease;
+        }
+        #preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .preloader-logo {
+            height: 4rem;
+            width: auto;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
+        
+        /* Prevent Image Download */
+        img {
+            pointer-events: none;
+        }
+
+        /* Header */
+        header {
+            padding: 1rem 5%;
+            background-color: transparent; /* Transparent by default */
+            position: fixed;
+            width: 100%;
+            height: auto;
+            top: 0;
+            z-index: 100;
+            /* Added transition for smooth effect */
+            transition: background-color 0.3s ease, backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
+        }
+        /* New class for scrolled state */
+        header.scrolled {
+            background-color: rgba(16, 16, 16, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        header img {
+            opacity: 0.85;
+            transition: opacity 0.2s ease-in-out, transform 0.3s ease;
+        }
+        header img:hover {
+            opacity: 1;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        header nav a img {
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 5%;
+            background-color: #0a0a0a;
+            border-top: 1px solid #2a2a2a;
+        }
+        footer p {
+            color: var(--text-secondary);
+        }
+        
+        /* File List Section */
+        .file-list-section {
+            padding: 8rem 5% 6rem; /* Start after header */
+            background-color: #0c0c0c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align to top */
+            align-items: center;
+        }
+        .file-list-content {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* --- NEW: Info Styles --- */
+        .file-list-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem; /* Reduced margin */
+            font-weight: 700;
+            text-align: center;
+        }
+        .page-description {
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 1.5rem auto;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        .base-url-label {
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .base-url-display {
+            background-color: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-family: 'Courier New', Courier, monospace;
+            color: #c0c0c0;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            word-break: break-all;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        /* --- END: Info Styles --- */
+
+
+        .file-tree {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .file-tree h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+        
+        .file-tree h3:first-child {
+            margin-top: 0;
+        }
+
+        .file-tree ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
+        
+        .file-tree li {
+            margin-bottom: 0.75rem; /* Adjusted margin */
+            display: flex; /* Added */
+            justify-content: space-between; /* Added */
+            align-items: center; /* Added */
+            gap: 1rem; /* Added */
+        }
+
+        .file-tree a {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease; /* Simplified transition */
+            display: inline-flex; /* Use flex to align icon */
+            align-items: center;
+            word-break: break-all;
+        }
+        
+        .file-tree a::before {
+            content: none; /* Removed the arrow */
+        }
+
+        .file-tree a:hover {
+            color: var(--accent-color);
+        }
+        
+        .file-tree a:hover::before {
+            opacity: 0; /* Hidden */
+        }
+        
+        .external-link-icon {
+            width: 0.9em;
+            height: 0.9em;
+            stroke: var(--text-secondary);
+            transition: stroke 0.3s ease;
+            margin-left: 0.5rem; /* Adjusted margin */
+            flex-shrink: 0;
+        }
+        
+        .file-tree a:hover .external-link-icon {
+            stroke: var(--accent-color);
+        }
+
+        /* --- UPDATED: Copy Button Styles --- */
+        .copy-btn {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0; /* Prevent button from shrinking */
+            
+            /* Flex properties for icon */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            min-width: 105px; /* Fixed width for smooth text change */
+        }
+
+        .copy-btn svg {
+            stroke: var(--text-secondary);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            color: var(--text-primary);
+        }
+        
+        .copy-btn:hover svg {
+            stroke: var(--text-primary);
+        }
+
+        .copy-btn .copied-icon {
+            display: none; /* Hide checkmark by default */
+        }
+
+        .copy-btn.copied {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+            cursor: default;
+        }
+
+        .copy-btn.copied .copy-icon {
+            display: none; /* Hide copy icon when copied */
+        }
+        .copy-btn.copied .copied-icon {
+            display: inline-block; /* Show checkmark when copied */
+            stroke: white;
+        }
+        /* --- END: Copy Button Styles --- */
+
+        @media (max-width: 768px) {
+            header {
+                padding: 8px 5%;
+            }
+            .file-list-section {
+                padding-top: 6rem;
+            }
+            .file-list-content h2 {
+                font-size: 2rem;
+            }
+            .page-description {
+                font-size: 0.9rem;
+            }
+            .base-url-display {
+                font-size: 0.85rem;
+            }
+            .file-tree {
+                padding: 1.5rem;
+            }
+            .file-tree h3 {
+                font-size: 1.5rem;
+            }
+            .file-tree a {
+                font-size: 0.9rem;
+            }
+            .copy-btn {
+                padding: 0.2rem 0.5rem;
+                font-size: 0.8rem;
+                min-width: 90px; /* Adjust for mobile */
+                gap: 0.3rem;
+            }
+        }
+    </style>
+
+</head>
+<body class="loading">
+
+    <div id="preloader">
+        <img src="https://projectcover.github.io/media/brand/project_cover-icon-white.png" alt="Loading..." class="preloader-logo" width="64" height="64">
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <a href="https://projectcover.github.io/home">
+                <img src="https://projectcover.github.io/media/brand/project_cover-icon-white.png" alt="Logo" id="header-logo" style="height: 3rem; width: auto;">
+            </a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- File List Section -->
+        <section class="file-list-section">
+            <div class="file-list-content">
+                <!-- UPDATED: Page Title -->
+                <h2>File Index</h2>
+                
+                <!-- NEW: Page Description -->
+                <p class="page-description">
+                    This page provides a complete directory of all public media assets hosted on the Project_Cover website. You can find and copy direct links to brand assets, cover images, and other project files.
+                </p>
+                <p class="base-url-label">All files are relative to the following base URL:</p>
+                <div class="base-url-display">
+                    https://projectcover.github.io/media/
+                </div>
+
+                
+                <div class="file-tree">
+                    <h3>/brand</h3>
+                    <ul>
+                        <li>
+                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-black.png" target="_blank" rel="noopener noreferrer">project_cover-icon-black.png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-orange(192x192).png" target="_blank" rel="noopener noreferrer">project_cover-icon-orange(192x192).png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-orange(512x512).png" target="_blank" rel="noopener noreferrer">project_cover-icon-orange(512x512).png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-orange.png" target="_blank" rel="noopener noreferrer">project_cover-icon-orange.png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-white-enlarged.png" target="_blank" rel="noopener noreferrer">project_cover-icon-white-enlarged.png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/brand/project_cover-icon-white.png" target="_blank" rel="noopener noreferrer">project_cover-icon-white.png<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                    </ul>
+
+
+
+                    <h3>/covers</h3>
+                    <ul>
+                        <li>
+                            <a href="https://projectcover.github.io/media/covers/11zeros-Corrugated_1.jpg" target="_blank" rel="noopener noreferrer">11zeros-Corrugated_1.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/covers/11zeros-Corrugated_2.jpg" target="_blank" rel="noopener noreferrer">11zeros-Corrugated_2.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_1.jpg" target="_blank" rel="noopener noreferrer">CASEOLOGY-Nano-Pop_1.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_2.jpg" target="_blank" rel="noopener noreferrer">CASEOLOGY-Nano-Pop_2.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_1.jpg" target="_blank" rel="noopener noreferrer">Casesily-Carbon-Fiber_1.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_2.jpg" target="_blank" rel="noopener noreferrer">Casesily-Carbon-Fiber_2.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_3.jpg" target="_blank" rel="noopener noreferrer">Casesily-Carbon-Fiber_3.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/covers/Spigen-Liquid-Air_1.jpg" target="_blank" rel="noopener noreferrer">Spigen-Liquid-Air_1.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/covers/Spigen-LiquidAir_2.jpg" target="_blank" rel="noopener noreferrer">Spigen-LiquidAir_2.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                    </ul>
+
+
+
+                    <h3>/images</h3>
+                    <ul>
+                        <li>
+                            <a href="https://projectcover.github.io/media/images/cover-image(raw).jpg" target="_blank" rel="noopener noreferrer">cover-image(raw).jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                        <li>
+                            <a href="https://projectcover.github.io/media/images/cover-image.jpg" target="_blank" rel="noopener noreferrer">cover-image.jpg<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="external-link-icon"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a>
+                            <!-- UPDATED: Copy Button -->
+                            <button class="copy-btn">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer>
+        <p>Website by Anurag Gautam</p>
+    </footer>
+
+    <script defer>
+        document.addEventListener("DOMContentLoaded", () => {
+             // --- PRELOADER ---
+            const preloader = document.getElementById('preloader');
+            
+            const hidePreloader = () => {
+                if (!document.body.classList.contains('loading')) return;
+                document.body.classList.remove('loading');
+                preloader.classList.add('loaded');
+            };
+
+            // Hide preloader after a short delay or on window load
+            window.onload = hidePreloader;
+            setTimeout(hidePreloader, 1000); // Failsafe
+
+            // Prevent image download
+            document.querySelectorAll('img').forEach(img => {
+                img.addEventListener('contextmenu', e => e.preventDefault());
+            });
+
+            // --- Header Scroll Effect ---
+            const headerElement = document.querySelector('header');
+            if (headerElement) {
+                const scrollThreshold = 10; // Pixels to scroll before changing header
+
+                const handleHeaderScroll = () => {
+                    if (window.scrollY > scrollThreshold) {
+                        headerElement.classList.add('scrolled');
+                    } else {
+                        headerElement.classList.remove('scrolled');
+                    }
+                };
+                
+                handleHeaderScroll(); // Run on load
+                window.addEventListener('scroll', handleHeaderScroll, { passive: true });
+            }
+
+            // --- UPDATED: Copy Link Logic ---
+            const copyButtons = document.querySelectorAll('.copy-btn');
+
+            copyButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const linkElement = button.previousElementSibling;
+                    if (!linkElement || !linkElement.href) return;
+
+                    const urlToCopy = linkElement.href;
+
+                    // Fallback method for iFrame compatibility
+                    const tempTextArea = document.createElement('textarea');
+                    tempTextArea.style.position = 'absolute';
+                    tempTextArea.style.left = '-9999px';
+                    tempTextArea.value = urlToCopy;
+                    document.body.appendChild(tempTextArea);
+                    tempTextArea.select();
+                    
+                    let success = false;
+                    try {
+                        success = document.execCommand('copy');
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+
+                    document.body.removeChild(tempTextArea);
+
+                    if (success) {
+                        // Get elements inside the clicked button
+                        const textSpan = button.querySelector('span');
+                        const copyIcon = button.querySelector('.copy-icon');
+                        const copiedIcon = button.querySelector('.copied-icon');
+                        
+                        if (!textSpan || !copyIcon || !copiedIcon) return;
+                        
+                        const originalText = textSpan.textContent; // Store original text
+
+                        // Change to "Copied" state
+                        textSpan.textContent = 'Copied!';
+                        button.classList.add('copied');
+                        button.disabled = true;
+                        copyIcon.style.display = 'none';
+                        copiedIcon.style.display = 'inline-block';
+
+                        // Revert back after 2 seconds
+                        setTimeout(() => {
+                            textSpan.textContent = originalText;
+                            button.classList.remove('copied');
+                            button.disabled = false;
+                            copyIcon.style.display = 'inline-block';
+                            copiedIcon.style.display = 'none';
+                        }, 2000);
+                    } else {
+                        console.error('Failed to copy link');
+                        // You could add user feedback for failure here
+                        const textSpan = button.querySelector('span');
+                        if (textSpan) {
+                            const originalText = textSpan.textContent;
+                            textSpan.textContent = 'Failed!';
+                            button.disabled = true;
+                             setTimeout(() => {
+                                textSpan.textContent = originalText;
+                                button.disabled = false;
+                            }, 2000);
+                        }
+                    }
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
