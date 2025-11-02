@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO: Updated Title -->
+    <title>Project_Cover Media - File Explorer</title>
+
+    <!-- SEO: Updated Meta Description -->
+    <meta name="description" content="An interactive file explorer for Project_Cover media assets.">
+    
+    <!-- SEO & Social Share Tags -->
+    <link rel="canonical" href="https://projectcover.github.io/file_index.html"/> 
+    <meta property="og:title" content="Project_Cover - File Explorer" />
+    <meta property="og:description" content="An interactive file explorer for Project_Cover media assets." />
+    <meta property="og:image" content="https://projectcover.github.io/media/brand/project_cover-icon-orange(512x512).png" /> 
+    <meta property="og:url" content="https://projectcover.github.io/file_index.html" /> 
+    <meta property="og:type" content="website" />
+    <!-- End SEO Tags -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap"></noscript>
+
+    <!-- Favicon & App Icon Links -->
+    <link rel="icon" href="https://projectcover.github.io/media/brand/project_cover-icon-orange.png" type="image/png">
+    <link rel="shortcut icon" href="https://projectcover.github.io/media/brand/project_cover-icon-orange(192x192).png" type="image/png">
+    <link rel="apple-touch-icon" href="https://projectcover.github.io/media/brand/project_cover-icon-orange.png">
+    
+    <!-- Web App Manifest (New) -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Theme Color for Browsers (New) -->
+    <meta name="theme-color" content="#101010">
+
+
+    <style>
+        /* CSS Reset and Basic Setup */
+        :root {
+            --primary-bg: #101010;
+            --secondary-bg: #1e1e1e;
+            --sidebar-bg: #191919; /* Slightly different bg for sidebar */
+            --main-bg: #101010; /* Main content bg */
+            --text-primary: #f0f0f0;
+            --text-secondary: #a0a0a0;
+            --accent-color: #FF6600;
+            --success-color: #28a745;
+            --font-main: 'Inter', sans-serif;
+            --font-headings: 'Lora', serif;
+        }
+
+        /* Custom Selection Styling */
+        ::-moz-selection {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        ::selection {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--primary-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            /* We will control overflow on the explorer layout */
+            overflow-y: hidden;
+        }
+        body.loading {
+            overflow: hidden;
+        }
+        /* New: Prevent body scroll when modal is open */
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.75s ease, visibility 0.75s ease;
+        }
+        #preloader.loaded {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .preloader-logo {
+            height: 4rem;
+            width: auto;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+        }
+        
+        /* Prevent Image Download */
+        img {
+            pointer-events: none;
+        }
+
+        /* Header */
+        /* header { ... existing code ... } */
+        /* REMOVED entire 'header' block */
+
+        /* Footer */
+        /* footer { ... existing code ... } */
+        /* REMOVED entire 'footer' block */
+        
+        /* --- NEW: Explorer Layout --- */
+        #explorer-container {
+            display: flex;
+            /* Start below header, end above footer */
+            height: 100vh; /* 100vh - header - footer height */
+            margin-top: 0; /* Header height */
+            width: 100%;
+        }
+
+        #sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--secondary-bg);
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        #sidebar-logo-link {
+            display: block;
+            text-align: center;
+            padding: 1.5rem 0; /* Add some space above/below logo */
+            margin-bottom: 1.5rem; /* Add space before "Favorites" */
+            border-bottom: 1px solid var(--secondary-bg);
+        }
+        #sidebar-logo {
+            height: 3rem;
+            width: auto;
+            opacity: 0.85;
+            transition: opacity 0.2s ease-in-out;
+        }
+        #sidebar-logo:hover {
+            opacity: 1;
+        }
+
+        #sidebar h3 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .folder-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .folder-item svg {
+            stroke: var(--text-secondary);
+            flex-shrink: 0;
+            transition: stroke 0.2s ease;
+        }
+
+        .folder-item:hover {
+            background-color: var(--secondary-bg);
+            color: var(--text-primary);
+        }
+        .folder-item:hover svg {
+            stroke: var(--text-primary);
+        }
+
+        .folder-item.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .folder-item.active svg {
+            stroke: white;
+        }
+
+        #main-content {
+            flex: 1;
+            background-color: var(--main-bg);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        #main-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        #current-folder-name {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        #file-count {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        #file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .file-item {
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid var(--secondary-bg);
+        }
+        .file-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border-color: #333;
+        }
+        
+        .file-item-thumbnail {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background-color: var(--primary-bg);
+            pointer-events: none; /* Allow click on parent */
+        }
+
+        .file-item-info {
+            padding: 1rem;
+        }
+
+        .file-item-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            word-break: break-all;
+            /* Clamp to 2 lines */
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+            min-height: 2.25em; /* 0.9 * 1.6 * 2 = 2.88... let's use 2.25 */
+        }
+
+        .file-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 0; /* Pill group */
+            background-color: #2a2a2a;
+            border-radius: 9999px;
+            border: 1px solid #333;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .action-btn {
+            background-color: transparent;
+            color: var(--text-secondary);
+            padding: 0.5rem 0.75rem; /* Smaller padding for grid */
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            flex: 1; /* Make buttons share space */
+        }
+        
+        .action-btn svg {
+            stroke: var(--text-secondary);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .action-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--text-primary);
+        }
+        .action-btn:hover svg {
+            stroke: var(--text-primary);
+        }
+        
+        .open-btn {
+            border-right: 1px solid #444; /* Divider */
+        }
+
+        .copy-btn .copied-icon {
+            display: none;
+        }
+
+        .copy-btn.copied {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+            cursor: default;
+        }
+        .copy-btn.copied:hover {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .copy-btn.copied .copy-icon {
+            display: none;
+        }
+        .copy-btn.copied .copied-icon {
+            display: inline-block;
+            stroke: white;
+        }
+
+        /* --- END: Explorer Layout --- */
+
+        
+        /* Original File List Section - HIDDEN */
+        .file-list-section {
+           display: none; /* Hide the original list */
+        }
+        
+        /* --- Preview Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            visibility: hidden;
+        }
+        .modal-overlay.visible {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            position: relative;
+            background: var(--secondary-bg);
+            padding: 1rem;
+            border-radius: 12px;
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--primary-bg);
+            border: 1px solid #333;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .modal-close:hover {
+            color: var(--text-primary);
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: scale(1.1) rotate(90deg);
+        }
+        
+        #preview-image {
+            max-width: 100%;
+            max-height: calc(90vh - 80px); /* Leave space for padding/caption */
+            object-fit: contain;
+            border-radius: 8px;
+            /* Allow image pointer events for saving, etc. */
+            pointer-events: auto; 
+        }
+        
+        #preview-caption {
+            color: var(--text-primary);
+            text-align: center;
+            margin-top: 1rem;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        /* --- END: Modal Styles --- */
+
+        @media (max-width: 768px) {
+            body {
+                overflow-y: auto; /* Allow body scroll on mobile */
+            }
+            #explorer-container {
+                flex-direction: column;
+                height: auto;
+                margin-top: 0; /* Smaller header */
+                padding-bottom: 0; /* Footer height */
+            }
+            #sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--secondary-bg);
+                padding: 1rem;
+                /* Allow horizontal scroll for folders */
+                display: flex;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 0.5rem;
+            }
+            #sidebar-logo-link {
+                display: none; /* Hide logo on mobile */
+            }
+            #sidebar h3 {
+                display: none; /* Hide 'Favorites' title */
+            }
+            .folder-item {
+                padding: 0.5rem 1rem;
+                flex-shrink: 0; /* Prevent folders from shrinking */
+            }
+            #main-content {
+                padding: 1rem;
+            }
+            #file-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+            .file-item-thumbnail {
+                height: 100px;
+            }
+            .file-item-info {
+                padding: 0.75rem;
+            }
+            .file-item-name {
+                font-size: 0.85rem;
+                min-height: 2.1em;
+            }
+            
+            /* Mobile modal */
+            .modal-close {
+                top: 5px;
+                right: 5px;
+            }
+            #preview-caption {
+                font-size: 0.9rem;
+            }
+            
+            /* header { ... existing code ... } */
+            /* REMOVED 'header' mobile block */
+            /* footer { ... existing code ... } */
+            /* REMOVED 'footer' mobile block */
+        }
+    </style>
+
+</head>
+<body class="loading">
+
+    <div id="preloader">
+        <img src="https://projectcover.github.io/media/brand/project_cover-icon-white.png" alt="Loading..." class="preloader-logo" width="64" height="64">
+    </div>
+
+    <!-- Header -->
+    <!-- REMOVED entire <header> element -->
+
+    <main>
+        <!-- NEW Explorer Layout -->
+        <div id="explorer-container">
+            <aside id="sidebar">
+                <a href="https://projectcover.github.io/home" id="sidebar-logo-link">
+                    <img src="https://projectcover.github.io/media/brand/project_cover-icon-white.png" alt="Logo" id="sidebar-logo">
+                </a>
+                <h3>projectcover.github.io/media/</h3>
+                <!-- Folders will be dynamically inserted here by JS -->
+            </aside>
+            <section id="main-content">
+                <div id="main-content-header">
+                    <h2 id="current-folder-name"></h2>
+                    <span id="file-count"></span>
+                </div>
+                <div id="file-grid">
+                    <!-- Files will be dynamically inserted here by JS -->
+                </div>
+            </section>
+        </div>
+
+
+        <!-- 
+          Original File List Section 
+          This is now HIDDEN and used only as a data source by our JavaScript.
+        -->
+        <section class="file-list-section">
+            <div class="file-list-content">
+                <h2>File Index</h2>
+                <p class="page-description">
+                    This page provides a complete directory of all public media assets hosted on the Project_Cover website. You can find and copy direct links to brand assets, cover images, and other project files.
+                </p>
+                <p class="base-url-label">All files are relative to the following base URL:</p>
+                <div class="base-url-display">
+                    https://projectcover.github.io/media/
+                </div>
+
+                
+                <div class="file-tree">
+                    <h3>/brand</h3>
+                    <ul>
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-black.png" data-filename="project_cover-icon-black.png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-black.png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-black.png</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-orange(192x192).png" data-filename="project_cover-icon-orange(192x192).png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-orange(192x192).png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-orange(192x192).png</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-orange(512x512).png" data-filename="project_cover-icon-orange(512x512).png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-orange(512x512).png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-orange(512x512).png</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-orange.png" data-filename="project_cover-icon-orange.png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-orange.png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-orange.png</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-white-enlarged.png" data-filename="project_cover-icon-white-enlarged.png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-white-enlarged.png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-white-enlarged.png</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/brand/project_cover-icon-white.png" data-filename="project_cover-icon-white.png">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/brand/project_cover-icon-white.png" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">project_cover-icon-white.png</span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <h3>/covers</h3>
+                    <ul>
+                        <li data-url="https://projectcover.github.io/media/covers/11zeros-Corrugated_1.jpg" data-filename="11zeros-Corrugated_1.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/11zeros-Corrugated_1.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">11zeros-Corrugated_1.jpg</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/covers/11zeros-Corrugated_2.jpg" data-filename="11zeros-Corrugated_2.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/11zeros-Corrugated_2.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">11zeros-Corrugated_2.jpg</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_1.jpg" data-filename="CASEOLOGY-Nano-Pop_1.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_1.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">CASEOLOGY-Nano-Pop_1.jpg</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_2.jpg" data-filename="CASEOLOGY-Nano-Pop_2.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/CASEOLOGY-Nano-Pop_2.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">CASEOLOGY-Nano-Pop_2.jpg</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_1.jpg" data-filename="Casesily-Carbon-Fiber_1.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_1.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Casesily-Carbon-Fiber_1.jpg</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_2.jpg" data-filename="Casesily-Carbon-Fiber_2.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_2.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Casesily-Carbon-Fiber_2.jpg</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_3.jpg" data-filename="Casesily-Carbon-Fiber_3.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Casesily-Carbon-Fiber_3.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Casesily-Carbon-Fiber_3.jpg</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/covers/Spigen-Liquid-Air_1.jpg" data-filename="Spigen-Liquid-Air_1.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Spigen-Liquid-Air_1.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Spigen-Liquid-Air_1.jpg</span>
+                            </div>
+                        </li>
+                        <li data-url="https://projectcover.github.io/media/covers/Spigen-LiquidAir_2.jpg" data-filename="Spigen-LiquidAir_2.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/covers/Spigen-LiquidAir_2.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">Spigen-Liquid-Air_2.jpg</span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <h3>/images</h3>
+                    <ul>
+                        <li data-url="https://projectcover.github.io/media/images/cover-image(raw).jpg" data-filename="cover-image(raw).jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/images/cover-image(raw).jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">cover-image(raw).jpg</span>
+                            </div>
+                        </li>
+
+                        <li data-url="https://projectcover.github.io/media/images/cover-image.jpg" data-filename="cover-image.jpg">
+                            <div class="file-info preview-trigger" title="Preview file">
+                                <img src="https://projectcover.github.io/media/images/cover-image.jpg" alt="Thumbnail" class="file-thumbnail" loading="lazy">
+                                <span class="file-name">cover-image.jpg</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    
+    <!-- Preview Modal HTML -->
+    <div id="preview-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" title="Close">&times;</span>
+            <img src="" alt="File Preview" id="preview-image">
+            <p id="preview-caption"></p>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <!-- REMOVED entire <footer> element -->
+
+    <script defer>
+        // Data structure to hold our file system
+        const fileSystem = {};
+
+        // --- Modal Preview Logic ---
+        const modalOverlay = document.getElementById('preview-modal');
+        const modalClose = modalOverlay.querySelector('.modal-close');
+        const previewImage = document.getElementById('preview-image');
+        const previewCaption = document.getElementById('preview-caption');
+
+        const openModal = (src, filename) => {
+            previewImage.src = src;
+            previewCaption.textContent = filename;
+            modalOverlay.classList.add('visible');
+            document.body.classList.add('modal-open'); // Prevent body scroll
+        };
+
+        const closeModal = () => {
+            modalOverlay.classList.remove('visible');
+            document.body.classList.remove('modal-open');
+            // Clear image src after transition to prevent flash
+            setTimeout(() => {
+                previewImage.src = ""; 
+            }, 300);
+        };
+
+        // Close modal events
+        modalClose.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('visible')) {
+                closeModal();
+            }
+        });
+        // --- End Modal Logic ---
+
+        
+        /**
+         * Parses the hidden file list and builds the fileSystem object.
+         */
+        function parseFileSystem() {
+            const originalList = document.querySelector('.file-tree');
+            const folderHeadings = originalList.querySelectorAll('h3');
+
+            folderHeadings.forEach(h3 => {
+                const folderName = h3.textContent.trim().replace(/\//g, ''); // Get name like "brand"
+                if (!folderName) return;
+                
+                fileSystem[folderName] = [];
+                
+                let nextElement = h3.nextElementSibling;
+                if (nextElement && nextElement.tagName === 'UL') {
+                    const listItems = nextElement.querySelectorAll('li');
+                    
+                    listItems.forEach(li => {
+                        const url = li.dataset.url;
+                        const filename = li.dataset.filename;
+                        const thumb = li.querySelector('.file-thumbnail')?.src;
+
+                        if (url && filename && thumb) {
+                            fileSystem[folderName].push({
+                                url: url,
+                                filename: filename,
+                                thumb: thumb
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        /**
+         * Populates the sidebar with clickable folder items.
+         */
+        function renderSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const folderIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`;
+
+            Object.keys(fileSystem).forEach(folderName => {
+                const folderItem = document.createElement('div');
+                folderItem.className = 'folder-item';
+                folderItem.dataset.folderName = folderName;
+                
+                // Capitalize first letter
+                const displayName = folderName.charAt(0).toUpperCase() + folderName.slice(1);
+                
+                folderItem.innerHTML = `${folderIcon} <span>${displayName}</span>`;
+                
+                folderItem.addEventListener('click', () => {
+                    // Remove active class from all
+                    sidebar.querySelectorAll('.folder-item').forEach(f => f.classList.remove('active'));
+                    // Add active class to clicked
+                    folderItem.classList.add('active');
+                    // Render files for this folder
+                    renderFiles(folderName);
+                });
+                
+                sidebar.appendChild(folderItem);
+            });
+        }
+
+        /**
+         * Renders the grid of files for a given folder.
+         * @param {string} folderName - The name of the folder to render.
+         */
+        function renderFiles(folderName) {
+            const mainContent = document.getElementById('file-grid');
+            const folderNameHeader = document.getElementById('current-folder-name');
+            const fileCount = document.getElementById('file-count');
+            
+            mainContent.innerHTML = ''; // Clear previous files
+            
+            const files = fileSystem[folderName];
+            if (!files) return;
+
+            // Update header
+            folderNameHeader.textContent = folderName.charAt(0).toUpperCase() + folderName.slice(1);
+            fileCount.textContent = `${files.length} item${files.length !== 1 ? 's' : ''}`;
+
+            files.forEach(file => {
+                const fileItem = document.createElement('div');
+                // This 'preview-trigger' class is used by the modal listener
+                fileItem.className = 'file-item preview-trigger'; 
+                fileItem.dataset.url = file.url;
+                fileItem.dataset.filename = file.filename;
+                
+                fileItem.innerHTML = `
+                    <img src="${file.thumb}" alt="${file.filename}" class="file-item-thumbnail" loading="lazy">
+                    <div class="file-item-info">
+                        <span class="file-item-name">${file.filename}</span>
+                        <div class="file-item-actions">
+                            <a href="${file.url}" target="_blank" rel="noopener noreferrer" class="action-btn open-btn" title="Open in new tab">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                <span>Open</span>
+                            </a>
+                            <button class="copy-btn action-btn" title="Copy file URL">
+                                <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <svg class="copied-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <span>Copy Link</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                mainContent.appendChild(fileItem);
+            });
+        }
+
+
+        /**
+         * Handles all clicks within the main content area using Event Delegation.
+         */
+        function setupMainContentListeners() {
+            const mainContent = document.getElementById('main-content');
+
+            mainContent.addEventListener('click', (e) => {
+                
+                // --- Handle Copy Button Click ---
+                const copyButton = e.target.closest('.copy-btn');
+                if (copyButton && !copyButton.disabled) {
+                    const fileItem = e.target.closest('.preview-trigger');
+                    if (!fileItem || !fileItem.dataset.url) return;
+                    
+                    const urlToCopy = fileItem.dataset.url;
+
+                    // Fallback method for iFrame compatibility
+                    const tempTextArea = document.createElement('textarea');
+                    tempTextArea.style.position = 'absolute';
+                    tempTextArea.style.left = '-9999px';
+                    tempTextArea.value = urlToCopy;
+                    document.body.appendChild(tempTextArea);
+                    tempTextArea.select();
+                    
+                    let success = false;
+                    try {
+                        success = document.execCommand('copy');
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+
+                    document.body.removeChild(tempTextArea);
+
+                    if (success) {
+                        const textSpan = copyButton.querySelector('span');
+                        const copyIcon = copyButton.querySelector('.copy-icon');
+                        const copiedIcon = copyButton.querySelector('.copied-icon');
+                        
+                        if (!textSpan || !copyIcon || !copiedIcon) return;
+                        
+                        const originalText = 'Copy Link';
+                        textSpan.textContent = 'Copied!';
+                        copyButton.classList.add('copied');
+                        copyButton.disabled = true;
+                        copyIcon.style.display = 'none';
+                        copiedIcon.style.display = 'inline-block';
+
+                        setTimeout(() => {
+                            textSpan.textContent = originalText;
+                            copyButton.classList.remove('copied');
+                            copyButton.disabled = false;
+                            copyIcon.style.display = 'inline-block';
+                            copiedIcon.style.display = 'none';
+                        }, 2000);
+                    } else {
+                        console.error('Failed to copy link');
+                    }
+                    return; // Stop further actions
+                }
+
+                // --- Handle File Preview Click ---
+                // We check *after* the copy button so clicking copy doesn't also open the modal.
+                const previewTrigger = e.target.closest('.preview-trigger');
+                if (previewTrigger) {
+                    const src = previewTrigger.dataset.url;
+                    const filename = previewTrigger.dataset.filename;
+                    if (src && filename) {
+                        openModal(src, filename);
+                    }
+                }
+            });
+        }
+
+
+        // --- Main Initialization ---
+        document.addEventListener("DOMContentLoaded", () => {
+             // --- PRELOADER ---
+            const preloader = document.getElementById('preloader');
+            
+            const hidePreloader = () => {
+                if (!document.body.classList.contains('loading')) return;
+                document.body.classList.remove('loading');
+                preloader.classList.add('loaded');
+            };
+
+            window.onload = hidePreloader;
+            setTimeout(hidePreloader, 1000); // Failsafe
+
+            // Prevent image download (except for preview)
+            document.querySelectorAll('img:not(#preview-image)').forEach(img => {
+                img.addEventListener('contextmenu', e => e.preventDefault());
+            });
+            
+            // --- NEW Explorer Logic ---
+            try {
+                parseFileSystem();
+                renderSidebar();
+                setupMainContentListeners();
+                
+                // Open the first folder by default
+                const firstFolder = Object.keys(fileSystem)[0];
+                if (firstFolder) {
+                    document.querySelector('.folder-item').classList.add('active');
+                    renderFiles(firstFolder);
+                }
+            } catch (error) {
+                console.error("Failed to initialize file explorer:", error);
+                // You could show an error message to the user here
+            }
+
+        });
+    </script>
+</body>
+</html>
